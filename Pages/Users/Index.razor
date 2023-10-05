@@ -1,0 +1,40 @@
+﻿@page "/usuarios"
+
+<h3>Usuarios (@Users.Count)</h3>
+<div class="mb-2">
+	<button class="btn btn-success">
+		Agregar
+	</button>
+</div>
+
+<div class="container">
+	@foreach (var user in Users)
+	{
+		<div class="card" style="width:18rem;">
+			<div class="card-body">
+				<label class="card-title">@user.Nombre @user.Apellido</label>
+				<div class="card-text">
+					<label><b>Correo:</b> @user.Email</label>
+				</div>
+				<button class="btn btn-warning">Editar</button>
+				<button class="btn btn-danger">Eliminar</button>
+			</div>
+		</div>
+	}
+</div>
+@code 
+{
+	public string Filtro { get; set; } = "";
+	public List<UserResponse> Users { get; set; } = new();
+
+	async Task CargarUsuarios()
+	{
+		var resultado = await userService.Consultar(Filtro);
+		if (resultado.Success) Users = resultado.Data!;
+	}
+
+	protected override async Task OnInitializedAsync()
+	{
+		await CargarUsuarios();
+	}
+}

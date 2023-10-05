@@ -1,0 +1,76 @@
+﻿<h3>UserCreateEdit</h3>
+
+<EditForm Model="request" OnValidSubmit="Send">
+	<div class="mb-3 input-group">
+		<label class="input-group-text">Nombre</label>
+		<InputText class="form-control" @bind-Value="@request.Nombre"></InputText>
+	</div>
+	<div class="mb-3">
+		<label class="input-group-text">Apellido</label>
+		<InputText class="form-control" @bind-Value="@request.Apellido"></InputText>
+	</div>
+	<div class="mb-3">
+		<label class="input-group-text">Correo</label>
+		<InputText class="form-control" @bind-Value="@request.Email"></InputText>
+	</div>
+	<div class="mb-3">
+		<label class="input-group-text">Clave</label>
+		<InputText class="form-control" @bind-Value="@request.Clave"></InputText>
+	</div>
+	<div class="btn-group">
+		<button type="submit" class="btn btn-outline-success">Guardar</button>
+		<button @onclick="Cancelar" class="btn btn-outline-danger">Cancelar</button>
+	</div>
+
+</EditForm>
+
+@code {
+	public string Filtro { get; set; } = "";
+	public List<UserResponse> Users { get; set; } = new();
+	public UserRequest request { get; set; } = new();
+
+	async Task CargarUsuarios()
+	{
+		var resultado = await userService.Consultar(Filtro);
+		if (resultado.Success) Users = resultado.Data!;
+	}
+
+	public async Task Send()
+	{
+		if(request.Id==0)
+		{
+			//Debo registrar
+			var r = await userService.Crear(request);
+			if (r.Success)
+			{
+				Cancelar();
+				await CargarUsuarios();
+				StateHasChanged();
+			}
+		}
+		else
+		{
+			//Debo modificar
+			var r = await userService.Modificar(request);
+			if (r.Success)
+			{
+				Cancelar();
+				await CargarUsuarios();
+				StateHasChanged();
+			}
+		}
+	}
+
+	public void Seleccionar(int Id)
+	{
+		request = Users
+		.Where(c => c.Id == Id)
+		.Select(c => c.ToRequest())
+		.FirstOrDefault()?? new UserRequest();
+	}
+
+	void Cancelar()
+	{
+		request = new UserRequest();
+	}
+}

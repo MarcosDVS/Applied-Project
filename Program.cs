@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using TORO.Data;
 using TORO.Data.Context;
+using TORO.Data.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +12,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<WeatherForecastService>();
 builder.Services.AddDbContext<ToroDbContext>();
 builder.Services.AddScoped<IToroDbContext,ToroDbContext>();
+builder.Services.AddScoped<IUserService,UserService>();
 
 var app = builder.Build();
 
