@@ -1,4 +1,8 @@
-﻿<h3>UserCreateEdit</h3>
+﻿@page "/usuariosCrearEditar"
+
+<MenuDisplay />
+
+<h3>UserCreateEdit</h3>
 
 <EditForm Model="request" OnValidSubmit="Send">
 	<div class="mb-3 input-group">
@@ -72,5 +76,6 @@
 	void Cancelar()
 	{
 		request = new UserRequest();
+		urlHelper.NavigateTo("/usuarios");
 	}
 }

@@ -1,8 +1,10 @@
 ﻿@page "/usuarios"
 
+<MenuDisplay />
+
 <h3>Usuarios (@Users.Count)</h3>
 <div class="mb-2">
-	<button class="btn btn-success">
+	<button @onclick="Llamar" class="btn btn-success">
 		Agregar
 	</button>
 </div>
@@ -36,5 +38,10 @@
 	protected override async Task OnInitializedAsync()
 	{
 		await CargarUsuarios();
+	}
+
+	void Llamar()
+	{
+		urlHelper.NavigateTo("/usuariosCrearEditar");
 	}
 }
